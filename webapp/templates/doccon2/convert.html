@@ -1,0 +1,189 @@
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000080;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+<body class="w3-light-grey">
+<!-- BEGIN NAVIGATION -->
+<ul class="w3-navbar w3-padding-8">
+    <li style="float:left">{% url 'index' as url %} {% load static %}<a href= "{{url}}"><img src="{% static 'logo.png' %}" alt="" style="width:28px;height:28px;"></a></li>
+    <li style="float:right">{% url 'Config Upload' as url %}<a href= "{{url}}">CONFIGURATIONS</a></li>
+    <li style="float:right">{% url 'Doc Upload' as url %}<a href= "{{url}}">DOCUMENTS</a></li>
+    <li class="w3-dropdown-hover" style="float:right"><a href= "#">CONVERT<i class="fa fa-caret-down"></i></a>
+        <div class="w3-dropdown-content w3-grey w3-card-4">
+            {% url 'Convert' 'HTML' as urlH %}<a href="{{urlH}}">HTML</a>
+            {% url 'Convert' 'WORD' as urlW %}<a href="{{urlW}}">WORD</a>
+            {% url 'Convert' 'PDF' as urlP %}<a href="{{urlP}}">PDF</a>
+        </div>
+    </li>
+    <li style="float:right">{% url 'index' as url %} <a href= "{{url}}">HOME</a></li>
+</ul>
+
+<!-- END NAVIGATION -->
+
+
+<div class="w3-container w3-indigo">
+    <h1 style=text-align:center>Convert</h1>
+</div>
+
+<div class="w3-container w3-pale-blue w3-leftbar w3-border-indigo w3-margin-0">
+      <h3><b>Instructions</b></h3>
+      <h4>
+        Choose documents to convert and a configuration for each. A maximum number of conversions are possible at any time.
+    </h4>
+</div>
+
+<!-- BEGIN CONFIGURATION INFO TABLE -->
+<div class="w3-accordion w3-section w3-light-grey w3-padding">
+    <button onclick="myFunction('Demo1')" class="w3-btn-block w3-left-align w3-teal">
+        <h3 style=text-align:left><b>Configurations Available</b></h3>
+    </button>
+    <div id="Demo1" class="w3-accordion-content w3-container">
+    <table class="w3-table-all">
+        <th>Name</th>
+        <th>Description</th>
+    {% for configuration in model_table %}
+        <tr>
+            <td>{{configuration.name}}</td>
+            <td>{{configuration.description}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+</div>
+<!-- END CONFIGURATION INFO TABLE -->
+
+<!-- BEGIN CONVERSION FORM -->
+<div class="w3-container w3-light-grey">
+    <form method="POST" enctype="multipart/form-data">
+    
+        <ul class="w3-navbar w3-indigo">
+        {% for each_form in formset %}
+            <li><a href="#" onclick="openDoc('Document {{forloop.counter0}}')">Document {{forloop.counter}}</a></li>
+        {% endfor %}
+        </ul>
+    
+        {% for each_form in formset %}
+        <div id="Document {{forloop.counter0}}" class="w3-container city w3-animate-left">
+            <p><b>{{each_form.DELETE.label}}</b>{{each_form.DELETE}}</p>
+            
+        
+            <div class="w3-container w3-pale-transparent">
+            
+                <div class="w3-accordion part w3-animate-left">
+                    <li href="#" onclick="myFunction('Doc {{forloop.counter0}}')" class="w3-btn-block w3-left-align w3-blue">
+                        <i class="fa fa-file-text-o"></i>
+                    </li>
+                    <div id="Doc {{forloop.counter0}}" class="w3-accordion-content w3-container">
+                    <h3 style=text-align:center>Choose Document</h3>
+                    <div class="w3-container w3-pale-transparent w3-quarter">
+                        <h4 style=text-align:center>New</h4>
+                        <p><b>{{each_form.doc_file.label}}</b>{{each_form.doc_file}} {{each_form.doc_file.help_text}}</p>
+                        <p><b>{{each_form.organization.label}}</b>{{each_form.organization}}</p>
+                    </div>
+                    
+                    <h4 style=text-align:center>Existing</h4>
+                    <div class="w3-container w3-pale-transparent w3-threequarter" style=overflow-y:scroll;height:350px>
+                
+                    {% for radio in each_form.select_doc %}
+                    
+                        <div class="w3-container w3-quarter w3-padding-medium">
+                            <div class="w3-card-4">
+                                <div class="w3-container w3-indigo">
+                                    {{ radio }}
+                                </div>
+                                <div class="w3-container w3-white w3-center"> 
+                                    {% load thumbnail %}
+                                    {% thumbnail docs.0 "200x100" quality="95" as im %}
+                                    <img src="{{im.url}}" width ="{{im.width}}" height="{{im.height}}" />
+                                    {% empty %}
+                                        <p>No Image Available</p>
+                                    {% endthumbnail %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="w3-accordion part w3-animate-left">
+                    <li onclick="myFunction('Config {{forloop.counter0}}')" class="w3-btn-block w3-left-align w3-teal">
+                        <i class="fa fa-key"></i>
+                    </li>
+                    <div id="Config {{forloop.counter0}}" class="w3-accordion-content w3-container">
+                    <h3 style=text-align:center>Choose Configuration</h3>
+                    <p style="text-align:center">{{each_form.select_config}}</p>
+                    <p style="text-align:center"><b>Leave blank if you plan to use a Supreme Configuration</b></p>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+        </div>
+        {% endfor %}
+        
+    <p>
+    <div class="w3-container w3-indigo w3-padding-medium">    
+        <b>{{supremeform}}</b>
+    </div>
+    </p>
+    {% csrf_token %}
+    {{formset.management_form}}
+    <p style="text-align: center">
+        <button type='submit' name='separate' value="Save">Separate</button>
+        <button type='submit' name='supreme' value="Save">Supreme</button>
+    </p>
+    </form>
+</div
+<!-- END CONVERSION FORM -->
+
+<!-- BEGIN SCRIPTS-->
+<script>
+openDoc("Document 0")
+function openDoc(cityName) {
+    var i;
+    var x = document.getElementsByClassName("city");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    document.getElementById(cityName).style.display = "block"; 
+}
+
+function myFunction(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+</script>
+<!-- END SCRIPTS-->
+
+</body>

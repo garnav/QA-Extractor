@@ -1,0 +1,73 @@
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000080;
+}
+
+li {
+    float: right;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<!-- BEGIN NAVIGATION -->
+<ul class="w3-navbar w3-padding-8">
+    <li style="float:left">{% url 'index' as url %} {% load static %}<a href= "{{url}}"><img src="{% static 'logo.png' %}" alt="" style="width:28px;height:28px;"></a></li>
+    <li style="float:right">{% url 'Config Upload' as url %}<a href= "{{url}}">CONFIGURATIONS</a></li>
+    <li style="float:right">{% url 'Doc Upload' as url %}<a href= "{{url}}">DOCUMENTS</a></li>
+    <li class="w3-dropdown-hover" style="float:right"><a href= "#">CONVERT<i class="fa fa-caret-down"></i></a>
+        <div class="w3-dropdown-content w3-grey w3-card-4">
+            {% url 'Convert' 'HTML' as urlH %}<a href="{{urlH}}">HTML</a>
+            {% url 'Convert' 'WORD' as urlW %}<a href="{{urlW}}">WORD</a>
+            {% url 'Convert' 'PDF' as urlP %}<a href="{{urlP}}">PDF</a>
+        </div>
+    </li>
+    <li style="float:right">{% url 'index' as url %} <a href= "{{url}}">HOME</a></li>
+</ul>
+
+<!-- END NAVIGATION -->
+
+<div class="w3-container w3-third">
+    <div class="w3-card-4 w3-white">
+        <div class="w3-container w3-blue"><i class='fa fa-upload w3-xxxlarge'></i><h3 style="display: inline-block;text-align: center">DOCUMENTS</h3></div>
+        <div class="w3-container w3-white">
+            <p style="text-align: center">{% url 'Doc Upload' as url %}<a href= "{{url}}"> UPLOAD</a></p>
+        </div>
+    </div>
+</div>
+<div class="w3-container w3-third">
+    <div class="w3-card-4 w3-white">
+        <div class="w3-container w3-teal"><i class='fa fa-key w3-xxxlarge'></i><h3 style="display: inline-block;text-align: center">CONFIGURATIONS</h3></div>
+        <div class="w3-container w3-white">
+            <p style="text-align: center">{% url 'Config Upload' as url %}<a href= "{{url}}"> UPLOAD</a></p>
+        </div>
+    </div>
+</div>
+<div class="w3-container w3-third">
+    <div class="w3-card-4 w3-white">
+        <div class="w3-container w3-indigo"><i class='fa fa-refresh w3-xxxlarge'></i> <h3 style="display: inline-block;text-align: center">CONVERT</h3></div>
+        <div class="w3-container w3-white">
+            <p style="text-align: center">{% url 'Convert' 'HTML' as url %}<a href= "{{url}}"> HTML DOCUMENTS</a></p>
+            <p style="text-align: center">{% url 'Convert' 'WORD' as url %}<a href= "{{url}}"> WORD DOCUMENTS</a></p>
+            <p style="text-align: center">{% url 'Convert' 'PDF' as url %}<a href= "{{url}}"> PDF DOCUMENTS</a></p>
+        </div>
+    </div>
+</div>

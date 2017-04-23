@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html>
+
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000080;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+
+h1,h2,h3{
+    font-size: 100%;
+    font: inherit
+}
+</style>
+
+    <head>
+        <title>Upload Configuration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+    </head>
+    
+    <body class="w3-light-grey">
+        <!-- BEGIN NAVIGATION -->
+        <div>
+            <ul class="w3-navbar w3-padding-8">
+                <li style="float:left">{% url 'index' as url %} {% load static %}<a href= "{{url}}"><img src="{% static 'logo.png' %}" alt="" style="width:28px;height:28px;"></a></li>
+                <li style="float:right">{% url 'Config Upload' as url %}<a href= "{{url}}">CONFIGURATIONS</a></li>
+                <li style="float:right">{% url 'Doc Upload' as url %}<a href= "{{url}}">DOCUMENTS</a></li>
+                <li class="w3-dropdown-hover" style="float:right"><a href= "#">CONVERT<i class="fa fa-caret-down"></i></a>
+                    <div class="w3-dropdown-content w3-grey w3-card-4">
+                        {% url 'Convert' 'HTML' as urlH %}<a href="{{urlH}}">HTML</a>
+                        {% url 'Convert' 'WORD' as urlW %}<a href="{{urlW}}">WORD</a>
+                        {% url 'Convert' 'PDF' as urlP %}<a href="{{urlP}}">PDF</a>
+                    </div>
+                </li>
+                <li style="float:right">{% url 'index' as url %} <a href= "{{url}}">HOME</a></li>
+            </ul>
+        </div>
+        <!-- END NAVIGATION -->
+
+        <!-- BEGIN PAGE TITLE -->
+        <div class="w3-container w3-teal">
+            <h1 style=text-align:center>Configuration Upload</h1>
+        </div>
+        <!-- END PAGE TITLE -->
+        
+        <!-- BEGIN INSTRUCTIONS-->
+        <div class="w3-container w3-pale-green w3-leftbar w3-border-teal w3-margin-0">
+            <h3><b>Instructions</b></h3>
+            <h4>
+                Add a custom configuration to the database. Configurations target specific documents and aim to extract relevant information as
+                titles and corresponding answers. See IBM Watson's Document Conversion Documentation to create a custom configuration.
+            </h4>
+        </div>
+        <!-- END INSTRUCTIONS-->
+        
+        <h3 style="text-align:center">{{message}}</h3>
+        
+        <!-- BEGIN UPLOAD FORM-->
+        <div class="w3-container w3-margin-left">
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+                <p><b>{{form.name.label}}</b> {{form.name}}</p>
+                <p><b>{{form.config_file.label}}</b> {{form.config_file}}</p><p>{{form.config_file.help_text}}</p>
+                <p><b>{{form.input_type.label}}</b> {{form.input_type}}</p><p>{{form.input_type.help_text}}</p>
+                <p><b>{{form.description.label}}</b></p><p>{{form.description}} </p><p class="">{{form.description.help_text}}</p>
+
+                <p> <input type='submit' value='Upload'> </p>
+            </form>
+        </div>
+        <!-- END UPLOAD FORM-->
+
+    </body>
+</html>
